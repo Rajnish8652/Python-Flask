@@ -26,11 +26,3 @@ def index():
             db.session.commit()
     return render_template('index.html', form=form)
     
-
-@home.route('/review/<get_nameno>')
-def review(get_nameno):
-    formdata =NamerForm()
-    for data in demo.query.filter_by(name=get_nameno):
-        formdata.name.data=data.name
-        formdata.password.data=data.password
-    return  render_template("index.html", form = formdata)
