@@ -1,21 +1,10 @@
-class register_form(FlaskForm):
-    username = StringField(
-        validators=[
-            InputRequired(),
-            Length(3, 20, message="Please provide a valid name"),
-            Regexp(
-                "^[A-Za-z][A-Za-z0-9_.]*$",
-                0,
-                "Usernames must have only letters, " "numbers, dots or underscores",
-            ),
-        ]
-    )
-    email = StringField(validators=[InputRequired(), Email(), Length(1, 64)])
-    pwd = PasswordField(validators=[InputRequired(), Length(8, 72)])
-    cpwd = PasswordField(
-        validators=[
-            InputRequired(),
-            Length(8, 72),
-            EqualTo("pwd", message="Passwords must match !"),
-        ]
-    )
+from flask import Flask
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField,EmailField,PasswordField,SelectField,RadioField
+from wtforms.validators import DataRequired
+#from PythonProjects.models import demo
+
+
+class NamerForm(FlaskForm):
+    name = StringField('name',render_kw={"placeholder": "Name"})
+    password = PasswordField('password',render_kw={"placeholder": "Password"})

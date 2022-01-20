@@ -1,8 +1,36 @@
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+from flask import Flask,Blueprint,request,render_template,redirect,flash,url_for
+from PythonProjects.forms import NamerForm
+from PythonProjects.models import demo
+from PythonProjects.models import db
 
 
+home = Blueprint('main',__name__,template_folder='templates')
+ 
+@home.route('/', methods=['GET'])
+def main():
+    detailsdata = demo.query.all()
+    return render_template("main.html", detailsdata = detailsdata)
+
+@home.route('/add', methods=['GET','POST'])
 def index():
-    print("hello")
-    print("hi")
+    form = NamerForm()
+
+    if request.method=='POST':
+        if form.validate_on_submit():
+            # Save data to DB
+            formdata = demo(
+                name=form.name.data,
+                password=form.password.data
+            )
+            db.session.add(formdata)
+            db.session.commit()
+    return render_template('index.html', form=form)
+    
+
+@home.route('/review/<get_nameno>')
+def review(get_nameno):
+    formdata =NamerForm()
+    for data in demo.query.filter_by(name=get_nameno):
+        formdata.name.data=data.name
+        formdata.password.data=data.password
+    return  render_template("index.html", form = formdata)
